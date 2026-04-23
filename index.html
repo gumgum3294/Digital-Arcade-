@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Digital Arcade</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      color: #e5e7eb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #020617;
+      overflow: hidden;
+    }
+
+    /* Just change this URL to swap the background */
+    .background {
+      position: fixed;
+      inset: 0;
+      background: url("BACKGROUND_IMAGE_URL_HERE") center center / cover no-repeat;
+      filter: brightness(0.55) saturate(1.3);
+      z-index: -2;
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top, rgba(56, 189, 248, 0.35), transparent 60%),
+        radial-gradient(circle at bottom, rgba(236, 72, 153, 0.35), transparent 60%),
+        rgba(15, 23, 42, 0.75);
+      z-index: -1;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      padding: 1.5rem;
+    }
+
+    .title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f9fafb;
+      text-shadow: 0 0 18px rgba(56, 189, 248, 0.9);
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #cbd5f5;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .iframe-container {
+      position: relative;
+      width: 1000px;
+      max-width: 100%;
+      height: 550px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px 5px rgba(67, 67, 71, 0.7),
+                  0 0 30px 10px rgba(67, 67, 71, 0.5);
+      overflow: hidden;
+      animation: glow 2s infinite alternate;
+      background: #000;
+    }
+
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+      border-radius: 20px;
+      position: absolute;
+      z-index: 1;
+    }
+
+    .loading-screen {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      background: url('https://lh4.googleusercontent.com/YS17qEsnXjgsf4WMCPo06WYkqMhiMDFE8qBDwMDXRkE00UOMi2j1RGgGACkg2veqUoBmd4VzBaFhZ-KS1q5D4yQ=w16383')
+        no-repeat center center / cover;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .loading-logo {
+      width: 300px;
+      height: auto;
+      margin-bottom: 30px;
+    }
+
+    .loading-circle {
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(255, 255, 255, 0.3);
+      border-top: 6px solid #fff;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .fullscreen-btn {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      background: #28282B;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 0 10px rgba(67, 67, 71, 0.7);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .fullscreen-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(67, 67, 71, 1);
+    }
+
+    @keyframes glow {
+      0% {
+        box-shadow: 0 0 10px 3px rgba(67, 67, 71, 0.5),
+                    0 0 20px 8px rgba(67, 67, 71, 0.3);
+      }
+      100% {
+        box-shadow: 0 0 25px 10px rgba(67, 67, 71, 1),
+                    0 0 40px 15px rgba(67, 67, 71, 0.8);
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .iframe-container {
+        height: 60vh;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="background"></div>
+  <div class="overlay"></div>
+
+  <div class="wrapper">
+    <div class="title">Digital Arcade</div>
+    <div class="subtitle">Click fullscreen for best experience.</div>
+
+    <div class="iframe-container">
+      <div class="loading-screen" id="loading-screen">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Logo_loading.png"
+          alt="Secured Logo"
+          class="loading-logo"
+        />
+        <div class="loading-circle"></div>
+      </div>
+
+      <!-- This already points to your main GitHub site -->
+      <iframe
+        src="https://gumgum3294.github.io/"
+        id="main-iframe"
+        onload="hideLoadingScreen()">
+      </iframe>
+
+      <button class="fullscreen-btn" onclick="openFullscreen()">⤢</button>
+    </div>
+  </div>
+
+  <script>
+    function hideLoadingScreen() {
+      const loadingScreen = document.getElementById("loading-screen");
+      const iframe = document.getElementById("main-iframe");
+
+      loadingScreen.style.transition = "opacity 0.5s";
+      loadingScreen.style.opacity = "0";
+
+      setTimeout(() => {
+        loadingScreen.style.display = "none";
+        iframe.style.zIndex = "0";
+      }, 500);
+    }
+
+    function openFullscreen() {
+      const iframeSrc = document.getElementById("main-iframe").src;
+      const newWindow = window.open("about:blank", "_blank");
+      newWindow.document.write(`
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+          <title>Digital Arcade - Fullscreen</title>
+          
